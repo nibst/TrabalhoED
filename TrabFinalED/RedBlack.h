@@ -1,32 +1,65 @@
 //TAD Rubro-Negra
 
-typedef struct tInfo
+//*******************************************
+
+typedef struct Tipo_Stats
 {
-    int id;
-    char palavra[20];
-}TipoInfo;
+    int nodos;              // Contagem dos nodos da árvore
+    int rotacoes;           // Contagem das rotações feitas na indexação
+    int altura;             // Altura total da árvore
+    int comparacoes_index;  // Comparações feitas na indexação
+    int comparacoes_search; // Comparações feitas na consulta
+}Stats;
 
-typedef struct TNodoA{
-TipoInfo info;
-int cor;
-struct TNodoA *esq;
-struct TNodoA *dir;
+//*******************************************
 
-}pNodoA;
+typedef struct Tipo_LSE
+{
+    int info;               // ID do tweet
+    struct Tipo_LSE* prox;  // Ponteiro para o próximo elemento da lsita
+}LSE;
 
+//*******************************************
+
+typedef struct Tipo_Desc
+{
+    LSE *inicioLista;       // Aponta para o início da lista
+    LSE *fimLista;          // Aponta para o fim da lista
+}Descritor;
+
+
+//*******************************************
+
+typedef struct Tipo_RedBlack
+{
+    struct Tipo_RedBlack *esq;   // Ponteiro para subárvore esquerda
+    struct Tipo_RedBlack *dir;   // Ponteiro para subárvore direita
+    struct Tipo_RedBlack *pai;   // Ponteiro para o pai do nodo atual
+    int cor;                     // Cor do nodo atual (0=preto, 1=vermelho)
+    char *info;                  // Palavra do nodo
+    Descritor desc;              // Descritor da lista de incidência, apontando para o início e para o fim
+}NodoRB;
+//*******************************************
+
+//Funções do LSE
+Descritor inicializa_lista(Descritor desc);
+
+Descritor insere_LSE(Descritor desc, int info);
+
+int consulta_lista(Descritor desc, int info);
 
 //Funções da Red-Black
+NodoRB* inicializa_arvore();
 
-pNodoA* rotacao_direita(pNodoA* p);
+NodoRB* insere_RB(NodoRB *raiz,char *palavra,int id,Stats *stats);
 
-pNodoA* rotacao_esquerda(pNodoA *p);
+NodoRB* consulta_RB(NodoRB *raiz, char *palavra, Stats *stats);
 
-pNodoA* rotacao_dupla_direita (pNodoA* p);
+void imprime_formatado(NodoRB *raiz, int nivel);
 
-pNodoA* rotacao_dupla_esquerda (pNodoA *p);
+int altura (NodoRB *raiz);
 
-//insere nodos à árvore
-pNodoA* indexa(pNodoA *no,char palavra[],int id_num);
+
 
 
 

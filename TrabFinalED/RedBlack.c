@@ -3,15 +3,92 @@
 #include <string.h>
 #include "RedBlack.h"
 
-#define PRETO 1
-#define VERMELHO 0
+#define PRETO 0
+#define VERMELHO 1
+
+
+//*************************************************
+//   OPERAÇÕES DA LISTA SIMPLESMENTE ENCADEADA
+//*************************************************
+
+Descritor inicializa_lista(Descritor desc)
+/* Inicializa o ponteiro para o início da lista */
+{
+    desc.fimLista = NULL;
+    desc.inicioLista = NULL;
+
+    return desc;
+}
+
+//********************************************************************
+//********************************************************************
+
+Descritor insere_LSE(Descritor desc, int info)
+/* Insere no início da lista os dados de um novo jogo.
+ * Atualiza o descritor da lista caso for possível inserir um elemento no final.
+ * Se não houver mais espaço na memória, apenas devolve o descritor da lista */
+{
+    LSE* novo;
+
+    novo = (LSE*)malloc(sizeof(LSE));
+
+    if(novo != NULL)
+    //se teve espaço na memória para alocar
+    {
+        novo->info = info;      //guarda a informação
+
+        if(desc.inicioLista == NULL)    //se a lista está vazia
+        {
+            desc.inicioLista = novo;    //novo ID é o início e fim da lista
+            desc.fimLista = novo;
+        }
+        else                            //senão
+        {
+            desc.fimLista->prox = novo; //fim da lista aponta para o novo termo
+            desc.fimLista = novo;       //novo termo se torna o fim da lista
+        }
+
+        novo->prox = NULL;
+    }
+
+    //retorna o descritor da lista
+    return desc;
+}
+
+//********************************************************************
+//********************************************************************
+
+int consulta_lista(Descritor desc, int info)
+/* Verifica se um dado ID está na lista.
+ * Devolve 1 se ele estiver.
+ * Devolve 0 se não estiver. */
+{
+    while(desc.inicioLista != NULL) //enquanto não chegou no final da lista
+    {
+        if(desc.inicioLista->info == info) //se encontrar o elemento
+            return 1;              //retorna 1
+        desc.inicioLista = desc.inicioLista->prox;
+    }
+
+    return 0; //se não encontrou o elemento, retorna 0
+}
+
+//*************************************************
+//           OPERAÇÕES DA ÁRVORE AVL
+//*************************************************
+
+NodoRB* inicializa_arvore()
+/* Retorna NULL para inicializar o ponteiro par aa raiz da árvore */
+{
+    return NULL;
+}
 
 //*************************************************************************
 //FUNCOES DE ROTAÇÃO RETIRADAS DOS SLIDES SOBRE AVL (LEVEMENTE MODIFICADAS)
 //*************************************************************************
-pNodoA* rotacao_direita(pNodoA* p)
+NodoRB* rotacao_direita(NodoRB* p)
 {
-    pNodoA *u;
+    NodoRB *u;
     u = p->esq;
     p->esq = u->dir;
     u->dir = p;
@@ -20,9 +97,9 @@ pNodoA* rotacao_direita(pNodoA* p)
     return p;
 }
 
-pNodoA* rotacao_esquerda(pNodoA *p)
+NodoRB* rotacao_esquerda(NodoRB *p)
 {
-    pNodoA *z;
+    NodoRB *z;
     z = p->dir;
     p->dir = z->esq;
     z->esq = p;
@@ -31,9 +108,9 @@ pNodoA* rotacao_esquerda(pNodoA *p)
 }
 
 
-pNodoA* rotacao_dupla_direita (pNodoA* p)
+NodoRB* rotacao_dupla_direita (NodoRB* p)
 {
-    pNodoA *u, *v;
+    NodoRB *u, *v;
     u = p->esq;
     v = u->dir;
     u->dir = v->esq;
@@ -46,9 +123,9 @@ pNodoA* rotacao_dupla_direita (pNodoA* p)
 }
 
 
-pNodoA* rotacao_dupla_esquerda (pNodoA *p)
+NodoRB* rotacao_dupla_esquerda (NodoRB *p)
 {
-    pNodoA *z, *y;
+    NodoRB *z, *y;
     z = p->dir;
     y = z->esq;
     z->esq = y->dir;
@@ -63,38 +140,39 @@ pNodoA* rotacao_dupla_esquerda (pNodoA *p)
 
 
 //so pra nao repetir codigo
-pNodoA* atribuicoes(pNodoA *no,char palavra[],int id_num)
+NodoRB* atribuicoes(NodoRB *no,char *palavra,int id)
 {
     no->esq = NULL;
     no->esq->cor = PRETO;
     no->dir = NULL;
     no->dir->cor = PRETO;
+    no->pai = NULL;
+    no->pai->cor = PRETO;
 
-    no->info.id = id_num;
-    strcpy(no->info.palavra,palavra);
+    strcpy(no->info,palavra);
     return no;
 }
 //insere os nodos sem ser a raiz
-pNodoA* indexaAux(pNodoA *no,char palavra[],int id_num)
+NodoRB* indexaAux(NodoRB *no,char palavra[],int id)
 {
     int ret;
     if(no==NULL)
     {
-        no = (pNodoA*)malloc(sizeof(pNodoA));
+        no = (NodoRB*)malloc(sizeof(NodoRB));
         no->cor = VERMELHO;
-        no=atribuicoes(no, palavra,id_num);
+        no=atribuicoes(no, palavra,id);
     }
     else
     {
 
-        ret = strcmp(palavra,no->info.palavra);
+        ret = strcmp(palavra,no->info);
         //palavra menor valor lexografico que a palavra de nodo a
         if(ret<0)
-            no->esq = indexaAux(no->esq,palavra,id_num);
+            no->esq = indexaAux(no->esq,palavra,id);
 
 
         if(ret>0)
-            no->dir = indexaAux(no->dir,palavra,id_num);
+            no->dir = indexaAux(no->dir,palavra,id);
 
         if(ret==0)
             return no;
@@ -104,26 +182,26 @@ pNodoA* indexaAux(pNodoA *no,char palavra[],int id_num)
 }
 
 //insere a raiz se for null, se nao for nulo vai pra funcao q insere outros nodos
-pNodoA* indexa(pNodoA *no,char palavra[],int id_num)
+NodoRB* insere_RB(NodoRB *no,char *palavra,int id,Stats *stats)
 {
     int ret;
     //inserir como raiz
     if(no==NULL)
     {
-        no = (pNodoA*)malloc(sizeof(pNodoA));
+        no = (NodoRB*)malloc(sizeof(NodoRB));
         no->cor = PRETO;
-        no=atribuicoes(no,palavra,id_num);
+        no=atribuicoes(no,palavra,id);
     }
     else
     {
-        ret = strcmp(palavra,no->info.palavra);
+        ret = strcmp(palavra,no->info);
         //palavra menor valor lexografico que a palavra de nodo a
         if(ret<0)
-            no->esq = indexaAux(no->esq,palavra,id_num);
+            no->esq = indexaAux(no->esq,palavra,id);
 
 
         if(ret>0)
-            no->dir = indexaAux(no->dir,palavra,id_num);
+            no->dir = indexaAux(no->dir,palavra,id);
 
         if(ret==0)
             return no;

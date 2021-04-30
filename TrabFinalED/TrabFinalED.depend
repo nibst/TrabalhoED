@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1617990897 source:c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\main.c
+1619203103 source:c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\main.c
 	<stdio.h>
 	<stdlib.h>
 	<string.h>
@@ -12,5 +12,5 @@
 	<stdlib.h>
 	"RedBlack.h"
 
-1617990897 c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\redblack.h
+1619202912 c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\redblack.h
 
