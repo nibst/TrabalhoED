@@ -51,13 +51,13 @@ int consulta_lista(Descritor desc, int info);
 //Funções da Red-Black
 NodoRB* inicializa_arvore();
 
-NodoRB* insere_RB(NodoRB *raiz,char *palavra,int id,Stats *stats);
+NodoRB* insere_RB(NodoRB *pai, NodoRB *no,char *palavra,int id,Stats *stats);
 
-NodoRB* consulta_RB(NodoRB *raiz, char *palavra, Stats *stats);
+NodoRB* consulta_arvore(NodoRB *no, char *palavra, Stats *stats);
 
-void imprime_formatado(NodoRB *raiz, int nivel);
+void imprime_formatado(NodoRB *no, int nivel);
 
-int altura (NodoRB *raiz);
+int altura (NodoRB *no);
 
 
 

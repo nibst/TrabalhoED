@@ -20,14 +20,14 @@ int main (int argc, char *argv[])
     FILE *saida;
     FILE *consulta;
     NodoRB *raiz;
+    NodoRB *no;
     NodoRB *nodoProcurado;
     Descritor descritor;
     Stats estatisticas = {0}; //variavel que guarda as estatistas da arvore
 
     char *palavra, linha[300], *id; // linhas a serem lidas do arquivo
     char separador[] = {" 0123456789,.&*%\?!;/-'@\"$#=~><()][}{:\n\t_"}; //caracteres separadores para as palavras
-    int id_num, ok = 0;
-
+    int id_num;
 
     /*if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 3): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
     {
@@ -41,6 +41,7 @@ int main (int argc, char *argv[])
         return 1;
     }
 
+    no = inicializa_arvore();
     raiz = inicializa_arvore();
 
     while(fgets(linha, 1000, entrada)) //l� cada linha do arquivo texto
@@ -52,14 +53,14 @@ int main (int argc, char *argv[])
         while (palavra != NULL) //enquanto encontrar palavras no tweet
         {
             converte_minuscula(palavra); //converte a palavra para min�sculo
-            raiz = insere_RB(raiz, palavra, id_num, &estatisticas); //indexa a palavra na árvore
+            no = insere_RB(&raiz, no, palavra, id_num, &estatisticas); //indexa a palavra na árvore
             palavra = strtok (NULL, separador); //pega a pr�xima palavra do tweet
         }
 
     }
     fclose(entrada); //fecha os arquivos
 
-    estatisticas.altura = altura(raiz); //calcula altura da arvore resultante
+    estatisticas.altura = altura(no); //calcula altura da arvore resultante
 
     if((consulta = fopen(argv[2], "r")) == NULL)
     {
@@ -77,7 +78,7 @@ int main (int argc, char *argv[])
     {
 
         palavra = strtok (linha, "\n"); //retira o '\n' do final da linha
-        nodoProcurado = consulta_RB(raiz, palavra, &estatisticas);
+        nodoProcurado = consulta_arvore(raiz, palavra, &estatisticas);
 
         if(nodoProcurado == NULL)   //se o nodo não foi encontrado
             fprintf(saida, "Consulta: %-20s Palavra não encontrada\n", palavra);

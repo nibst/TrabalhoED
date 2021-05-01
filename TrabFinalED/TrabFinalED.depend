@@ -14,3 +14,19 @@
 
 1619202912 c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\redblack.h
 
+1619899690 source:c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+	<ctype.h>
+	"RedBlack.h"
+
+1619899614 c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\redblack.h
+
+1619899690 source:c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\redblack.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"RedBlack.h"
+
