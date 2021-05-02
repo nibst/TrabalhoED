@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1619203103 source:c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+	<ctype.h>
+	"RedBlack.h"
+
+1617982899 source:c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\redblack.c
+	<stdio.h>
+	<stdlib.h>
+	"RedBlack.h"
+
+1619202912 c:\users\nikol\onedrive\documentos\ufrgs\c\trabfinaled\redblack.h
+
+1619909422 source:c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<locale.h>
+	<ctype.h>
+	"RedBlack.h"
+
+1619906170 c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\redblack.h
+
+1619910255 source:c:\users\clovis l. schuster\documents\ufrgs nikolas\trabalhoed-main\trabfinaled\redblack.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"RedBlack.h"
+
