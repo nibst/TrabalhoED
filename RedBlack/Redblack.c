@@ -386,7 +386,7 @@ int paiVermelho(NodoRB *no,Stats *stats)
 
 
 
-NodoRB* insere_RB(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,int *balance)
+NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,int *balance)
 {
     int retorno;
     stats->comparacoes_index++;
@@ -425,7 +425,7 @@ NodoRB* insere_RB(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,int *
         //palavra menor valor lexografico que a palavra de nodo no
         if(retorno<0)
         {
-            no->esq = insere_RB(no,no->esq,palavra,id,stats,balance);
+            no->esq = insere_arvore(no,no->esq,palavra,id,stats,balance);
             //balanceamento tem q ser depois de definir o no->esq e dps de definir no->dir.
             switch(*balance)
             {
@@ -459,7 +459,7 @@ NodoRB* insere_RB(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,int *
         // se palavra de ordem lexografica maior que a do nodo no
         else if(retorno>0)
         {
-            no->dir = insere_RB(no,no->dir,palavra,id,stats,balance);
+            no->dir = insere_arvore(no,no->dir,palavra,id,stats,balance);
             switch(*balance)
             {
 
@@ -500,7 +500,6 @@ NodoRB* insere_RB(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,int *
 
 //********************************************************************
 //********************************************************************
-
 NodoRB* consulta_arvore(NodoRB* raiz, char* palavra, Stats* stats)
 /* Busca na árvore a palavra dada, retornando um ponteiro para o nodo encontrado.
  * Se não existir a palavra, retorna NULL */

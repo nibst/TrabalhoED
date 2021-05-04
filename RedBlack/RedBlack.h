@@ -4,13 +4,12 @@
 
 typedef struct Tipo_Stats
 {
-    int nodos;              // Contagem dos nodos da árvore
-    int rotacoes;           // Contagem das rotações feitas na indexação
-    int altura;             // Altura total da árvore
-    int comparacoes_index;  // Comparações feitas na indexação
-    int comparacoes_search; // Comparações feitas na consulta
+    long int nodos;              // Contagem dos nodos da árvore
+    long int rotacoes;           // Contagem das rotações feitas na indexação
+    int altura;                  // Altura total da árvore
+    long int comparacoes_index;  // Comparações feitas na indexação
+    long int comparacoes_search; // Comparações feitas na consulta
 }Stats;
-
 //*******************************************
 
 typedef struct Tipo_LSE
@@ -51,7 +50,7 @@ int consulta_lista(Descritor desc, int info);
 //Funções da Red-Black
 NodoRB* inicializa_arvore();
 
-NodoRB* insere_RB(NodoRB *pai, NodoRB *no,char *palavra,int id,Stats *stats,int *balance);
+NodoRB* insere_arvore(NodoRB *pai, NodoRB *no,char *palavra,int id,Stats *stats,int *balance);
 
 NodoRB* consulta_arvore(NodoRB *no, char *palavra, Stats *stats);
 

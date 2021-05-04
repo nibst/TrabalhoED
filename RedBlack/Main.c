@@ -27,8 +27,7 @@ int main (int argc, char *argv[])
 
     char *palavra, linha[300], *id; // linhas a serem lidas do arquivo
     char separador[] = {" 0123456789,.&*%\?!;/-'@\"$#=~><()][}{:\n\t_"}; //caracteres separadores para as palavras
-    int id_num,balance;
-
+    int id_num, balance;
 
 
     if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
@@ -42,23 +41,22 @@ int main (int argc, char *argv[])
         printf("*** Erro ao abrir arquivo de entrada ***\n");
         return 1;
     }
-    //nodo e seu pai vazios
+
     no = inicializa_arvore();
     pai = inicializa_arvore();
-    //4 quer dizer q esta balanceado
+    //balance = 4 quer dizer q esta balanceado
     balance = 4;
 
-    while(fgets(linha, 1000, entrada)) //l� cada linha do arquivo texto
+    while(fgets(linha, 1000, entrada)) //lê cada linha do arquivo texto
     {
         id = strtok (linha, ";"); //pega o id do tweet
-        id_num = atoi(id); //converte o id para num�rico (vai ser necess�rio para inserir o id tweet na lista de ocorr�ncias)
+        id_num = atoi(id); //converte o id para numerico (vai ser necessário para inserir o id tweet na lista de ocorrências)
         palavra = strtok (NULL, separador); //pega a 1a palavra do tweet
-
         while (palavra != NULL) //enquanto encontrar palavras no tweet
         {
             converte_minuscula(palavra); //converte a palavra para min�sculo
-            no = insere_RB(pai, no, palavra, id_num, &estatisticas,&balance); //indexa a palavra na árvore
-            palavra = strtok (NULL, separador); //pega a pr�xima palavra do tweet
+            no = insere_arvore(pai,no, palavra, id_num, &estatisticas,&balance); //indexa a palavra na árvore
+            palavra = strtok (NULL, separador); //pega a próxima palavra do tweet
         }
 
     }
@@ -102,12 +100,12 @@ int main (int argc, char *argv[])
     fclose(consulta);
 
     fprintf(saida, "\n********** Estatísticas da Indexação **************\n");
-    fprintf(saida, "nodos = %d\n", estatisticas.nodos);
-    fprintf(saida, "comparações = %d\n", estatisticas.comparacoes_index);
-    fprintf(saida, "rotações = %d\n", estatisticas.rotacoes);
+    fprintf(saida, "nodos = %ld\n", estatisticas.nodos);
+    fprintf(saida, "comparações = %ld\n", estatisticas.comparacoes_index);
+    fprintf(saida, "rotações = %ld\n", estatisticas.rotacoes);
     fprintf(saida, "altura da árvore = %d\n\n", estatisticas.altura);
     fprintf(saida, "********** Estatísticas das Consultas **************\n");
-    fprintf(saida, "comparações = %d", estatisticas.comparacoes_search);
+    fprintf(saida, "comparações = %ld", estatisticas.comparacoes_search);
 
     fclose(saida);
 
