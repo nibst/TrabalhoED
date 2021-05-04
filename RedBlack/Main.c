@@ -27,13 +27,15 @@ int main (int argc, char *argv[])
 
     char *palavra, linha[300], *id; // linhas a serem lidas do arquivo
     char separador[] = {" 0123456789,.&*%\?!;/-'@\"$#=~><()][}{:\n\t_"}; //caracteres separadores para as palavras
-    int id_num;
+    int id_num,balance;
 
-    /*if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 3): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
+
+
+    if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
     {
         printf ("Número incorreto de parâmetros.\n Para chamar o programa digite: %s <arq_entrada> <arq_consulta> <arq_saida>\n",argv[0]);
         return 1;
-    }*/
+    }
 
     if((entrada = fopen(argv[1], "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
     {
@@ -43,6 +45,8 @@ int main (int argc, char *argv[])
     //nodo e seu pai vazios
     no = inicializa_arvore();
     pai = inicializa_arvore();
+    //4 quer dizer q esta balanceado
+    balance = 4;
 
     while(fgets(linha, 1000, entrada)) //l� cada linha do arquivo texto
     {
@@ -53,7 +57,7 @@ int main (int argc, char *argv[])
         while (palavra != NULL) //enquanto encontrar palavras no tweet
         {
             converte_minuscula(palavra); //converte a palavra para min�sculo
-            no = insere_RB(pai, no, palavra, id_num, &estatisticas); //indexa a palavra na árvore
+            no = insere_RB(pai, no, palavra, id_num, &estatisticas,&balance); //indexa a palavra na árvore
             palavra = strtok (NULL, separador); //pega a pr�xima palavra do tweet
         }
 
