@@ -3,7 +3,14 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h>
+#include<stdbool.h>
 #include "RedBlack.h"
+
+#define PRETO 0
+#define VERMELHO 1
+
+
+
 
 void converte_minuscula (char *s)
 {
@@ -30,13 +37,13 @@ int main (int argc, char *argv[])
     int id_num, balance;
 
 
-    if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
-    {
-        printf ("Número incorreto de parâmetros.\n Para chamar o programa digite: %s <arq_entrada> <arq_consulta> <arq_saida>\n",argv[0]);
-        return 1;
-    }
+    //if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
+    //{
+    //   printf ("Número incorreto de parâmetros.\n Para chamar o programa digite: %s <arq_entrada> <arq_consulta> <arq_saida>\n",argv[0]);
+    //  return 1;
+    // }
 
-    if((entrada = fopen(argv[1], "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
+    if((entrada = fopen("base_100.txt", "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
     {
         printf("*** Erro ao abrir arquivo de entrada ***\n");
         return 1;
@@ -64,13 +71,13 @@ int main (int argc, char *argv[])
 
     estatisticas.altura = altura(no); //calcula altura da arvore resultante
 
-    if((consulta = fopen(argv[2], "r")) == NULL)
+    if((consulta = fopen("consulta_100.txt", "r")) == NULL)
     {
         printf("*** Erro ao abrir o arquivo de consulta! ***\n");
         return 1;
     }
 
-    if ((saida = fopen(argv[3], "w")) == NULL)   // testa se consegue criar o arquivo de saída
+    if ((saida = fopen("saida_100.txt", "w")) == NULL)   // testa se consegue criar o arquivo de saída
     {
         printf("*** Erro ao criar arquivo de saida! ***\n");
         return 1;
@@ -79,7 +86,7 @@ int main (int argc, char *argv[])
     while(fgets(linha, 1000, consulta)) //l� cada linha do arquivo de consulta
     {
 
-        palavra = strtok (linha, "\n"); //retira o '\n' do final da linha
+        palavra = strtok (linha, separador); //retira o '\n' do final da linha
         nodoProcurado = consulta_arvore(no, palavra, &estatisticas);
 
         if(nodoProcurado == NULL)   //se o nodo não foi encontrado
@@ -96,7 +103,7 @@ int main (int argc, char *argv[])
             fprintf(saida, "\n");
         }
     }
-
+    imprime_formatado(no,0);
     fclose(consulta);
 
     fprintf(saida, "\n********** Estatísticas da Indexação **************\n");
@@ -105,7 +112,7 @@ int main (int argc, char *argv[])
     fprintf(saida, "rotações = %ld\n", estatisticas.rotacoes);
     fprintf(saida, "altura da árvore = %d\n\n", estatisticas.altura);
     fprintf(saida, "********** Estatísticas das Consultas **************\n");
-    fprintf(saida, "comparações = %ld", estatisticas.comparacoes_search);
+    fprintf(saida, "comparações = %ld\n", estatisticas.comparacoes_search);
 
     fclose(saida);
 

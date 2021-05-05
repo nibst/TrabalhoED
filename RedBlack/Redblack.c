@@ -96,7 +96,7 @@ void imprime_formatado(NodoRB* raiz, int nivel)
         {
             printf("=");
         }
-        printf("%s\n", raiz->info);
+        printf("%s(%d)\n", raiz->info,raiz->cor);
 
         imprime_formatado(raiz->esq, nivel + 1);
         imprime_formatado(raiz->dir, nivel + 1);
@@ -257,7 +257,7 @@ NodoRB* rotacao_dupla_esquerda (NodoRB *no)
 }
 //*************************************************
 
-NodoRB* alteraCores(NodoRB *no)
+NodoRB* alteraCores(NodoRB *no,int *balance)
 {
     //Not de 0 = 1, Not de 1 = 0 == Troca cores
     //troca cores do pai, tio e avo do nodo que foi inserido
@@ -265,6 +265,9 @@ NodoRB* alteraCores(NodoRB *no)
     no->cor =  !(no->cor);
     no->dir->cor =  !(no->dir->cor);
     no->esq->cor =  !(no->esq->cor);
+    if(no->pai !=NULL)
+        if((no->cor && no->pai->cor) == VERMELHO)
+            *balance = paiVermelho(no);
 
     return no;
 }
@@ -351,7 +354,7 @@ NodoRB* balanceamento_dir(NodoRB *no, Stats *stats,int *balance)
 
     return no;
 }
-int paiVermelho(NodoRB *no,Stats *stats)
+int paiVermelho(NodoRB *no)
 {
 
     NodoRB *Avo;
@@ -413,7 +416,7 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
             no->cor = VERMELHO;
             //se pai for vermelho balancear
             if(pai->cor == VERMELHO)
-                *balance=paiVermelho(no,stats);
+                *balance=paiVermelho(no);
         }
         stats->nodos++;
 
@@ -435,10 +438,19 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
                 (*balance)++;
                 break;
             case 1:
-                no=alteraCores(no);
+                no=alteraCores(no,balance);
                 //se o pai for null, nodo é raiz,deixar cor como preto
                 if(no->pai == NULL)
                     no->cor = PRETO;
+                if(*balance == 0)
+                {
+                    no=alteraCores(no,balance);
+                    //se o pai for null, nodo é raiz,deixar cor como preto
+                    if(no->pai == NULL)
+                        no->cor = PRETO;
+                }
+                else if(*balance == 2)
+                    no=balanceamento_esq(no,stats,balance);
                 //balanceamento esta ok, balance =4
                 *balance = 4;
                 break;
@@ -454,8 +466,6 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
             }
         }
 
-
-
         // se palavra de ordem lexografica maior que a do nodo no
         else if(retorno>0)
         {
@@ -468,10 +478,19 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
                 (*balance)++;
                 break;
             case 1:
-                no=alteraCores(no);
-                //se o pai for null, no é raiz,deixar cor como preto
+                no=alteraCores(no,balance);
+                //se o pai for null, nodo é raiz,deixar cor como preto
                 if(no->pai == NULL)
                     no->cor = PRETO;
+                if(*balance == 0)
+                {
+                    no=alteraCores(no,balance);
+                    //se o pai for null, nodo é raiz,deixar cor como preto
+                    if(no->pai == NULL)
+                        no->cor = PRETO;
+                }
+                else if(*balance == 2)
+                    no=balanceamento_dir(no,stats,balance);
                 //balanceamento esta ok, balance =4
                 *balance = 4;
                 break;
@@ -504,15 +523,20 @@ NodoRB* consulta_arvore(NodoRB* raiz, char* palavra, Stats* stats)
 /* Busca na árvore a palavra dada, retornando um ponteiro para o nodo encontrado.
  * Se não existir a palavra, retorna NULL */
 {
+    int retorno;
+    char *haha;
+
     if(raiz != NULL)  //se a árvore não está vazia
     {
+        haha =raiz->info;
+        retorno = strcmp(palavra, raiz->info);
         stats->comparacoes_search++; //aumenta o número de comparações feitas nas consultas
 
-        if(strcmp(palavra, raiz->info) < 0) //se a palavra é lexicograficamente menor que o nodo atual
+        if(retorno < 0) //se a palavra é lexicograficamente menor que o nodo atual
         {
             return(consulta_arvore(raiz->esq, palavra, stats)); //vai para o nodo esquerdo
         }
-        else if(strcmp(palavra, raiz->info) > 0) //se a palavra é lexicograficamente maior que o nodo atual
+        else if(retorno > 0) //se a palavra é lexicograficamente maior que o nodo atual
         {
             return(consulta_arvore(raiz->dir, palavra, stats)); //vai para o nodo direito
         }
