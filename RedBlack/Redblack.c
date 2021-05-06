@@ -257,7 +257,7 @@ NodoRB* rotacao_dupla_esquerda (NodoRB *no)
 }
 //*************************************************
 
-NodoRB* alteraCores(NodoRB *no,int *balance)
+NodoRB* alteraCores(NodoRB *no)
 {
     //Not de 0 = 1, Not de 1 = 0 == Troca cores
     //troca cores do pai, tio e avo do nodo que foi inserido
@@ -265,9 +265,6 @@ NodoRB* alteraCores(NodoRB *no,int *balance)
     no->cor =  !(no->cor);
     no->dir->cor =  !(no->dir->cor);
     no->esq->cor =  !(no->esq->cor);
-    if(no->pai !=NULL)
-        if((no->cor && no->pai->cor) == VERMELHO)
-            *balance = paiVermelho(no);
 
     return no;
 }
@@ -414,9 +411,6 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
         {
             //inserir vermelho
             no->cor = VERMELHO;
-            //se pai for vermelho balancear
-            if(pai->cor == VERMELHO)
-                *balance=paiVermelho(no);
         }
         stats->nodos++;
 
@@ -429,7 +423,11 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
         if(retorno<0)
         {
             no->esq = insere_arvore(no,no->esq,palavra,id,stats,balance);
-            //balanceamento tem q ser depois de definir o no->esq e dps de definir no->dir.
+
+             //se pai e filho forem vermelho balancear, verificar o tio do filho
+            if((no->cor && no->esq->cor) == VERMELHO)
+                *balance = paiVermelho(no->esq);
+            //balanceamentos tem q ser depois de definir o no->esq e dps de definir no->dir.
             switch(*balance)
             {
 
@@ -438,19 +436,10 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
                 (*balance)++;
                 break;
             case 1:
-                no=alteraCores(no,balance);
+                no=alteraCores(no);
                 //se o pai for null, nodo é raiz,deixar cor como preto
                 if(no->pai == NULL)
                     no->cor = PRETO;
-                if(*balance == 0)
-                {
-                    no=alteraCores(no,balance);
-                    //se o pai for null, nodo é raiz,deixar cor como preto
-                    if(no->pai == NULL)
-                        no->cor = PRETO;
-                }
-                else if(*balance == 2)
-                    no=balanceamento_esq(no,stats,balance);
                 //balanceamento esta ok, balance =4
                 *balance = 4;
                 break;
@@ -470,6 +459,10 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
         else if(retorno>0)
         {
             no->dir = insere_arvore(no,no->dir,palavra,id,stats,balance);
+
+            //se pai e filho forem vermelho balancear, verificar o tio do filho
+              if((no->cor && no->dir->cor) == VERMELHO)
+                *balance = paiVermelho(no->dir);
             switch(*balance)
             {
 
@@ -478,19 +471,10 @@ NodoRB* insere_arvore(NodoRB *pai,NodoRB *no,char *palavra,int id,Stats *stats,i
                 (*balance)++;
                 break;
             case 1:
-                no=alteraCores(no,balance);
+                no=alteraCores(no);
                 //se o pai for null, nodo é raiz,deixar cor como preto
                 if(no->pai == NULL)
                     no->cor = PRETO;
-                if(*balance == 0)
-                {
-                    no=alteraCores(no,balance);
-                    //se o pai for null, nodo é raiz,deixar cor como preto
-                    if(no->pai == NULL)
-                        no->cor = PRETO;
-                }
-                else if(*balance == 2)
-                    no=balanceamento_dir(no,stats,balance);
                 //balanceamento esta ok, balance =4
                 *balance = 4;
                 break;
@@ -524,11 +508,9 @@ NodoRB* consulta_arvore(NodoRB* raiz, char* palavra, Stats* stats)
  * Se não existir a palavra, retorna NULL */
 {
     int retorno;
-    char *haha;
 
-    if(raiz != NULL)  //se a árvore não está vazia
+    if(raiz != NULL && palavra !=NULL)  //se a árvore não está vazia e a palavra existe
     {
-        haha =raiz->info;
         retorno = strcmp(palavra, raiz->info);
         stats->comparacoes_search++; //aumenta o número de comparações feitas nas consultas
 

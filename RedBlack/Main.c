@@ -6,10 +6,6 @@
 #include<stdbool.h>
 #include "RedBlack.h"
 
-#define PRETO 0
-#define VERMELHO 1
-
-
 
 
 void converte_minuscula (char *s)
@@ -43,7 +39,7 @@ int main (int argc, char *argv[])
     //  return 1;
     // }
 
-    if((entrada = fopen("base_100.txt", "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
+    if((entrada = fopen("base_100k.txt", "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
     {
         printf("*** Erro ao abrir arquivo de entrada ***\n");
         return 1;
@@ -77,7 +73,7 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-    if ((saida = fopen("saida_100.txt", "w")) == NULL)   // testa se consegue criar o arquivo de saída
+    if ((saida = fopen("saida_100k.txt", "w")) == NULL)   // testa se consegue criar o arquivo de saída
     {
         printf("*** Erro ao criar arquivo de saida! ***\n");
         return 1;
@@ -86,7 +82,7 @@ int main (int argc, char *argv[])
     while(fgets(linha, 1000, consulta)) //l� cada linha do arquivo de consulta
     {
 
-        palavra = strtok (linha, separador); //retira o '\n' do final da linha
+        palavra = strtok (linha, separador); //retira o '\n' do final da linha e caso tenha um ' ' no final da palavra, entre outros problemas
         nodoProcurado = consulta_arvore(no, palavra, &estatisticas);
 
         if(nodoProcurado == NULL)   //se o nodo não foi encontrado
@@ -103,7 +99,6 @@ int main (int argc, char *argv[])
             fprintf(saida, "\n");
         }
     }
-    imprime_formatado(no,0);
     fclose(consulta);
 
     fprintf(saida, "\n********** Estatísticas da Indexação **************\n");
