@@ -33,13 +33,13 @@ int main (int argc, char *argv[])
     int id_num, balance;
 
 
-    //if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
-    //{
-    //   printf ("Número incorreto de parâmetros.\n Para chamar o programa digite: %s <arq_entrada> <arq_consulta> <arq_saida>\n",argv[0]);
-    //  return 1;
-    // }
+    if(argc != 4)  //testa se o numero de parametros esperado está correto (deve ser 4): nome do programa (argv[0]), nome do arq de entrada(argv[1]), nome do arq de consulta(argv[2]), nome do arq de saida(argv[3])
+    {
+       printf ("Número incorreto de parâmetros.\n Para chamar o programa digite: %s <arq_entrada> <arq_consulta> <arq_saida>\n",argv[0]);
+      return 1;
+     }
 
-    if((entrada = fopen("base_100k.txt", "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
+    if((entrada = fopen(argv[1], "r")) == NULL)   // testa se consegue abrir o arquivo de entrada
     {
         printf("*** Erro ao abrir arquivo de entrada ***\n");
         return 1;
@@ -67,13 +67,13 @@ int main (int argc, char *argv[])
 
     estatisticas.altura = altura(no); //calcula altura da arvore resultante
 
-    if((consulta = fopen("consulta_100.txt", "r")) == NULL)
+    if((consulta = fopen(argv[2], "r")) == NULL)
     {
         printf("*** Erro ao abrir o arquivo de consulta! ***\n");
         return 1;
     }
 
-    if ((saida = fopen("saida_100k.txt", "w")) == NULL)   // testa se consegue criar o arquivo de saída
+    if ((saida = fopen(argv[3], "w")) == NULL)   // testa se consegue criar o arquivo de saída
     {
         printf("*** Erro ao criar arquivo de saida! ***\n");
         return 1;
